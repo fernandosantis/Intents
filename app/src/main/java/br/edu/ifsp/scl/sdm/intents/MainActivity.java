@@ -69,18 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 return(true);
 
             case R.id.callMi:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        requisitarPermissaoLigacao();
-                    }
-                    else
-                    {
-                        discarTelefone();
-                    }
-                }
-                else
-                {
+                if (permitirLigacao()) {
                     discarTelefone();
+                } else {
+                    Toast.makeText(getApplicationContext(),"Você precisa permitir para realizar ligações",Toast.LENGTH_SHORT).show();
                 }
                 return(true);
 
@@ -107,8 +99,26 @@ public class MainActivity extends AppCompatActivity {
          startActivity(discarIntent);
     }
 
-    private void requisitarPermissaoLigacao() {
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},1);
+    private boolean permitirLigacao() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CALL_PHONE},1);
+                return(false);
+            }
+            else
+            {
+                return(true);
+            }
+        }
+        else
+        {
+            return(true);
+        }
+
+
+
+
     }
 
 
